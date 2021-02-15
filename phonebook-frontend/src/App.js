@@ -67,9 +67,8 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            console.log(error);
             setNotifClassName('error')
-            setMessage(`Information of ${personToUpdate.name} has already been removed from server`)
+            setMessage(error.response.data.error)
             setTimeout(() => {
               setMessage(null)
             }, 5000)
@@ -84,6 +83,15 @@ const App = () => {
           setNewNumber('')
           setNotifClassName('success')
           setMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          // this is the way to access the error message
+          console.log(error.response.data)
+          setNotifClassName('error')
+          setMessage(error.response.data.error)
           setTimeout(() => {
             setMessage(null)
           }, 5000)
