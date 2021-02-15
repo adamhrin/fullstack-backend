@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.static('build'))
 app.use(cors())
 
-morgan.token('body', (req, res) => JSON.stringify(req.body))
+morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms- :res[content-length] :body'))
 
 app.get('/api/persons', (request, response) => {
@@ -44,23 +44,15 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
 })
 
-const isDuplicate = (name) => {
-  const nameArr = persons.map(p => p.name).concat(name)
-  const isDuplicate = nameArr.some((name, id) => 
-    nameArr.indexOf(name) != id
-  )
-  return isDuplicate
-}
-
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
+
   if (body.name === undefined) {
     return response.status(400).json({ error: 'name missing' })
   }
@@ -74,10 +66,12 @@ app.post('/api/persons', (request, response, next) => {
     number: body.number
   })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
-  .catch(error => next(error))
+  person
+    .save()
+    .then(savedPerson => {
+      response.json(savedPerson)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -87,7 +81,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   }
 
-  console.log(person);
+  console.log(person)
 
   const opts = { runValidators: true, new: true }
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -45,7 +44,7 @@ const App = () => {
     // check for duplicates
     const nameArr = newPersons.map(person => person.name)
     const isDuplicate = nameArr.some((name, id) => 
-      nameArr.indexOf(name) != id
+      nameArr.indexOf(name) !== id
     )
     if (isDuplicate) {
       if (window.confirm(`${newName} is already in the phonebook, replace the old number with a new one?`)) {
